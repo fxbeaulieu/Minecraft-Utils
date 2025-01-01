@@ -20,6 +20,8 @@ start_server() {
         sudo screen -dmS "$screen_name" java -Xms1G -Xmx2G -jar $server_jar nogui
     elif [ "server_name" == "frost" ]; then
         sudo screen -dmS "$screen_name" java -Xms1G -Xmx2G -jar $server_jar nogui
+    elif [ "server_name" == "creative" ]; then
+        sudo screen -dmS "$screen_name" java -Xms1G -Xmx2G -jar $server_jar nogui
     else
         sudo screen -dmS "$screen_name" java -Xms1G -Xmx2G -jar $server_jar nogui --bonusChest
     fi
@@ -46,6 +48,8 @@ elif [ "$1" == "portal_house" ]; then
     start_server "portal_house" "server_1.21.4.jar"
 elif [ "$1" == "frost" ]; then
     start_server "frost" "server_1.21.3.jar"
+elif [ "$1" == "creative" ]; then
+    start_server "creative" "server_1.21.4.jar"
 elif [ "$1" == "all" ]; then
 #    start_server "infected" "vanilla.jar"
     start_server "portal_house" "server_1.21.4.jar"
@@ -58,6 +62,7 @@ elif [ "$1" == "all" ]; then
     start_server "palissade" "server_1.21.3.jar"
     start_server "new_start" "server_1.21.4.jar"
     start_server "frost" "server_1.21.3.jar"
+    start_server "creative" "server_1.21.4.jar"
 else
     echo "Unknown Server"
     exit 1
