@@ -42,6 +42,10 @@ $MinecraftServers = @(
     @{
         Name = "Dot3";
         Port = "25589"
+    },
+    @{
+        Name = "Creative";
+        Port = "25581"
     }
 )
 $nmapScan = nmap.exe --version-light -p 25565-25600 192.168.2.33
