@@ -2,7 +2,7 @@
 param (
     [Parameter(Mandatory)]
     [string]
-    [ValidateSet("1.21.3","1.21.4")]
+    [ValidateSet("1.21.3","1.21.4","Fabric_1.21.4")]
     $GameVersion,
     [Parameter(Mandatory)]
     [ValidateSet("Survival","Creative")]
@@ -21,12 +21,16 @@ param (
     $ServerName,
     [Parameter()]
     [string]
-    $ServerDescription
+    $ServerDescription,
+    [Parameter]
+    [string]
+    $FabricModPack
 )
 
 $script:path_base = $PSScriptRoot
 $script:server_jars_directory_path = "$path_base/jar_src"
 $script:server_config_templates_directory = "$path_base/templates"
+$script:fabric_mods_directory_path = "$path_base/fabric_mods"
 $script:servers_base_directory = "$path_base/server_jar/1.21"
 $script:new_server_base_directory = "$script:servers_base_directory/$ServerName"
 $script:new_server_jar_to_use = "$script:server_jars_directory_path/server_$GameVersion.jar"
@@ -80,7 +84,32 @@ function Set-ServerProperties {
     Set-Content -Path $ServerPropertiesFile -Value $ConfiguredServerProperties -Force
 }
 
+function Set-FabricMods{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $ServerName,
+        [Parameter(Mandatory)]
+        [string]
+        $FabricModPack
+    )
+    $FabricModPackArchivePath = "$script:fabric_mods_directory_path\$FabricModPack.zip"
+    $TempModPackExtractPath ="$script:path_base\temp"
+    if(Test-Path -Path $TempModPackExtractPath){
+        Remove-Item -Recurse -Force -Path $TempModPackExtractPath
+    }
+    Expand-Archive -Path $FabricModPackArchivePath -DestinationPath $TempModPackExtractPath -Force
+    Copy-Item -Recurse -Force -Path "$TempModPackExtractPath\*" -Destination "$script:new_server_base_directory\"
+    Remove-Item -Recurse -Force -Path $TempModPackExtractPath
+}
+
 if(!(Test-Path -Path $script:new_server_base_directory)){
     $ServerPropertiesFile = Set-ServerDirectoryAndBaseFiles -ServerJar $script:new_server_jar_to_use -ServerBaseDirectory $script:new_server_base_directory
     Set-ServerProperties -GameMode $GameMode -GameDifficulty $GameDifficulty -ServerPort $ServerPort -ServerDescription $ServerDescription -ServerPropertiesFile $ServerPropertiesFile
+    if($GameVersion -like "*Fabric*"){
+        if($FabricModPack){
+            Set-FabricMods -ServerName $ServerName -FabricModPack $FabricModPack
+        }
+    }
 }
