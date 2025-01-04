@@ -1,3 +1,10 @@
+$SaveFile = "$ENV:USERPROFILE\Desktop\Minecraft_Serveurs_Ouverts.txt"
+if(!(Test-Path -Path $SaveFile)){
+    New-Item -Path $SaveFile -Force -ItemType File
+}
+else{
+    Set-Content -Path $SaveFile -Value "" -Force
+}
 $MinecraftServers = @(
     @{
         Name = "Duo";
@@ -58,5 +65,8 @@ foreach($Server in $MinecraftServers){
     $ServerPort = $Server.Port
     if($nmapResults -like "*$ServerPort*"){
         Write-Host "Le monde $ServerName est disponible sur 192.168.2.33:$ServerPort"
+        Add-Content -Value "Le monde $ServerName est disponible sur 192.168.2.33:$ServerPort`n" -Path $SaveFile -Force
     }
 }
+Read-Host -Prompt "Appuyez sur ENTER lorsque vous avez terminé."
+&notepad.exe $SaveFile
