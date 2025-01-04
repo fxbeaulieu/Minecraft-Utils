@@ -20,6 +20,9 @@ else{
     if($JarFiles.Name -contains "server_1.21.4.jar"){
         $ServerJar = $JarFiles | Where-Object -Property Name -Contains "server_1.21.4.jar" | Select-Object -ExpandProperty Name
     }
+    elseif($JarFiles.Name -contains "fabric_1.21.4.jar"){
+        $ServerJar = $JarFiles | Where-Object -Property Name -Contains "fabric_1.21.4.jar" | Select-Object -ExpandProperty Name
+    }
     elseif($JarFiles.Name -contains "server_1.21.3.jar"){
         $ServerJar = $JarFiles | Where-Object -Property Name -Contains "server_1.21.3.jar" | Select-Object -ExpandProperty Name
     }
